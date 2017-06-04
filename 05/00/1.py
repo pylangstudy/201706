@@ -1,0 +1,8 @@
+basket = set()
+print(basket)
+basket.add('apple')
+print(basket)
+basket.add('apple')
+print(basket)
+basket.update({'orange', 'banana'})
+print(basket)
