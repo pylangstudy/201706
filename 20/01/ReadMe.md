@@ -67,7 +67,7 @@ Programmer
 Human
 ```
 
-わざわざprivateにする必要があるのか？オーバーライドされてもHumanのselfはHumanではないのか？
+わざわざマングリングする必要があるのか？オーバーライドされてもHumanのselfはHumanではないのか？
 
 #### selfとオーバーライド
 
@@ -90,13 +90,13 @@ Programmer
 Programmer
 ```
 
-HumanのselfはProgrammerを参照するようだ。たしか`p.show()`は`Human.show(p)`と等価だった。つまり、第一引数selfはProgrammerのインスタンスになる。これは理解できる。
+HumanのselfはProgrammerを参照するようだ。たしか`p.show()`は`Human.show(p)`と等価だった。つまり、第一引数selfはProgrammerのインスタンスになる。理解できた。
 
 しかしそうなると、なぜProgrammerクラスのインスタンスで`_Human__intro()`メソッドが参照できるのか疑問である。`intro()`はオーバーライドされるからProgrammerクラスにも存在する。しかし、`__intro()`はHumanクラスだけが所有しているのでは？Programmerクラスからも参照できるのか？
 
 #### instance._クラス__メソッド名
 
-private変数と同じく、privateメソッドも同様の名前で参照できた。
+マングリングと同様の名前で参照できた。
 
 ```
 class Human:
@@ -131,7 +131,7 @@ Programmer
 ---------Programmer intro end----------
 ```
 
-子クラスから親クラスのprivateメソッドを参照できる。`instance._クラス名__メソッド名`で。ただしinstanceには`self`または`super()`を用いる。
+子クラスから親クラスの`__メソッド名`メソッドを参照できる。`instance._クラス名__メソッド名`で。ただしinstanceには`self`または`super()`を用いる。
 
 ### まとめ
 
@@ -179,7 +179,9 @@ Programmer
 
 ## 結論
 
-Pythonはすべてpublicである。privateにできない。カプセル化できない。どこでもどのように変更されうるため、全コードを読まねば原因箇所を特定できない。大規模化するとメンテ不能に陥る可能性大。
+Pythonはすべてpublicである。privateにできない。変数名の先頭に`__`を付与するマングリングは名前を変化させるだけでpublicである。
+
+つまりPythonはカプセル化できない。どこでもどのように変更されうるため、全コードを読まねば原因箇所を特定できない。大規模化するとメンテ不能に陥る可能性大。
 
 ソフトウェアは複雑化、大規模化している。Pythonの貧弱な言語仕様では、後々バグ修正やテストなどのコストがかさむことが予想される。Pythonは小規模かつ単純な構造のときのみ利用するのが賢明か。
 
