@@ -98,7 +98,7 @@ HumanのselfはProgrammerを参照するようだ。たしか`p.show()`は`Human
 
 マングリングと同様の名前で参照できた。
 
-```
+```python
 class Human:
     def __init__(self): self.__intro()
     def intro(self): print('Human')
