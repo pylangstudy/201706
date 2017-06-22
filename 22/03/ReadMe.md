@@ -1,74 +1,81 @@
-# [9.10. ジェネレータ式](https://docs.python.jp/3/tutorial/classes.html#generator-expressions)
+# [10.1. OSへのインタフェース](https://docs.python.jp/3/tutorial/stdlib.html#operating-system-interface)
 
-< [9. クラス](https://docs.python.jp/3/tutorial/classes.html#classes) < [Python チュートリアル](https://docs.python.jp/3/tutorial/index.html) < [ドキュメント](https://docs.python.jp/3/index.html)
+< [10. 標準ライブラリミニツアー](https://docs.python.jp/3/tutorial/classes.html#generator-expressions) < [Python チュートリアル](https://docs.python.jp/3/tutorial/index.html) < [ドキュメント](https://docs.python.jp/3/index.html)
 
-## ジェネレータ式
+## [os](https://docs.python.jp/3/library/os.html#module-os)
 
-> 単純なジェネレータなら、式を使って簡潔にコードする方法があります。リスト内包に似た構文の式ですが、角括弧ではなく丸括弧を使います。ジェネレータ式は、関数の中でジェネレータをすぐに使いたいような状況のために用意されています。ジェネレータ式はコンパクトですが、完全なジェネレータに比べてちょっと融通の効かないところがありますが、同じ内容を返すリスト内包よりはメモリに優しいことが多いという利点があります。
+> os モジュールは、オペレーティングシステムと対話するための多くの関数を提供しています
+
+```python
+import os
+print(os.getcwd()) # Get Current Working Directory
+print(os.system('mkdir some')) # シェルコマンド 戻り値: 0(正常終了), 256(mkdir: ディレクトリ `some' を作成できません: ファイルが存在します)
+print(os.chdir('/tmp/some'))  # Change Current Working Directory 戻り値: None
+print(os.getcwd())
+```
+
+someディレクトリがない場合。
+```
+$ python 0.py 
+/tmp
+0
+None
+/tmp/some
+```
+
+someディレクトリがある場合。
+```
+$ python 0.py 
+/tmp
+mkdir: ディレクトリ `some' を作成できません: ファイルが存在します
+256
+None
+/tmp/some
+```
+
+### 名前重複の罠
+
+> from os import * ではなく、 import os 形式を使うようにしてください。そうすることで、動作が大きく異なる組み込み関数 open() が os.open() で遮蔽されるのを避けられます。
+
+これはひどい。open()関数の定義があるモジュールをimportしてしまうと、組み込み関数のopen()が上書きされてしまう。標準ライブラリ同士でさえこの有り様。Pythonの名前重複は破壊的。
+
+## [dir()](https://docs.python.jp/3/library/functions.html#dir), [help()](https://docs.python.jp/3/library/functions.html#help)
+
+> 組み込み関数 dir() および help() は、 os のような大規模なモジュールで作業をするときに、対話的な操作上の助けになります
+
+```python
+import os
+print(dir(os))
+print(help(os))
+```
+
+dir()は属性一覧、help()はヘルプ表示。英語なのでヘルプにならない助けて。
+
+## [shutil](https://docs.python.jp/3/library/shutil.html#module-shutil)
+
+> ファイルやディレクトリの日常的な管理作業のために、より簡単に使える高水準のインタフェースが shutil モジュールで提供されています:
+
+[shutil](https://docs.python.jp/3/library/shutil.html#module-shutil)はshell utilityの略と思われる。リンク先をみても関数の名前がわかりづらい。Pythonは読み易くない。短く書くために短縮された名前が読みにくい。また、短縮されていないのも混在している。読みにくいだけでなく覚えづらくて書きづらい。
 
 ### 例
 
-```
-sum(i*i for i in range(10))
-```
-
-### 書式
-
-ジェネレータ式の構文は以下である。
-
 ```python
-(式 for 変数 in iterable変数)
+import shutil
+shutil.copyfile('2.txt', '2.copy.txt')
+shutil.move('2.copy.txt', 'some')
 ```
 
-類似の構文についてまとめる。
+以下のエラーが生じる。
 
-構文|表記
-----|----
-リスト内包表記|`[式 for 変数 in iterable変数]`
-辞書内包表記|`{式 for 変数 in iterable変数}`
-ジェネレータ式|`(式 for 変数 in iterable変数)`
+#### ファイルがない
 
-### sum()
-
-Python文書の補足をする。[sum()](https://docs.python.jp/3/library/functions.html#sum)は組み込み関数である。反復可能(iterable)な要素の和(合計値)を返す。yieldは__iter__(),__next__()の自動実装をするイテラブル
-
-### range()
-
-[range()](https://docs.python.jp/3/library/functions.html#func-range)は組み込み関数である。指定した範囲内の値を反復可能(iterable)で返す。`
-range(start, stop[, step])`の形式。startは開始値、stopは終了値、stepは刻み数。
-
-## 例
-
-ジェネレータ式。
-
-```python
-for v in (i+1 for i in [1,2,3]): print(v, end=' ')
-```
 ```sh
-$ python 0.py 
-2 3 4
+FileNotFoundError: [Errno 2] No such file or directory: '2.txt'
 ```
 
-[前々回](https://github.com/pylangstudy/201706/tree/master/22/00#%E7%8B%AC%E8%87%AA%E5%AE%9F%E8%A3%85)、[前回](https://github.com/pylangstudy/201706/tree/master/22/01#%E4%BE%8B)と同様に逆順にする例。
+#### コピー先に既存である
 
-```python
-l = [1,2,3]
-for v in (l[i] for i in range(len(l)-1, -1, -1)): print(v, end=' ')
-```
 ```sh
-$ python 1.py 
-3 2 1
+shutil.Error: Destination path 'some/2.copy.txt' already exists
 ```
-
-わずか2行で書けてしまった。
-
-## まとめ
-
-Pythonには繰り返し処理を短く書ける構文がある。高速化や省メモリなどパフォーマンスを制御したいときにもこの構文の使用を検討する必要がありそう。
-
-構文|表記
-----|----
-リスト内包表記|`[式 for 変数 in iterable変数]`
-辞書内包表記|`{式 for 変数 in iterable変数}`
-ジェネレータ式|`(式 for 変数 in iterable変数)`
 
