@@ -187,7 +187,7 @@ xz  92
 
 圧縮するとサイズが大きくなってしまう。一体どのくらいのサイズから有用になるのか。
 
-## [zipfile](https://docs.python.jp/3/library/zipfile.html#module-zipfile)モジュールを使わずにできてしまった。これらはファイル単体のときに使うのか？
+## [zipfile](https://docs.python.jp/3/library/zipfile.html#module-zipfile)
 
 ```python
 import zipfile
